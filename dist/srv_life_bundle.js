@@ -27014,29 +27014,87 @@
 /* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _react=__webpack_require__(1);var _react2=_interopRequireDefault(_react);
+	'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _slicedToArray=function(){function sliceIterator(arr,i){var _arr=[];var _n=true;var _d=false;var _e=undefined;try{for(var _i=arr[typeof Symbol==='function'?Symbol.iterator:'@@iterator'](),_s;!(_n=(_s=_i.next()).done);_n=true){_arr.push(_s.value);if(i&&_arr.length===i)break;}}catch(err){_d=true;_e=err;}finally{try{if(!_n&&_i["return"])_i["return"]();}finally{if(_d)throw _e;}}return _arr;}return function(arr,i){if(Array.isArray(arr)){return arr;}else if((typeof Symbol==='function'?Symbol.iterator:'@@iterator')in Object(arr)){return sliceIterator(arr,i);}else{throw new TypeError("Invalid attempt to destructure non-iterable instance");}};}();var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _react=__webpack_require__(1);var _react2=_interopRequireDefault(_react);
 	var _reactDom=__webpack_require__(34);var _reactDom2=_interopRequireDefault(_reactDom);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var
-
-
 
 	Globe=function(_React$Component){_inherits(Globe,_React$Component);
 
 
 	function Globe(props){_classCallCheck(this,Globe);var _this=_possibleConstructorReturn(this,(Globe.__proto__||Object.getPrototypeOf(Globe)).call(this,
 	props));
-	_this.state={globe_data:null};return _this;
+	_this.state={globe_data:null};
+	_this.globe=null;return _this;
+
 
 	}_createClass(Globe,[{key:'componentWillMount',value:function componentWillMount()
 	{
-	console.log($);
+
+
+	$.ajax({'url':'https://chetan-techjam.deploy.akamai.com/cgi/handle_globe_data.cgi',
+	'success':function(data){
+
+
+	var globe_data={'B1':[],'B2':[],'B3':[],'B4':[]};
+	for(var i in data){var _i$split=
+	i.split(':');var _i$split2=_slicedToArray(_i$split,2);var latitude=_i$split2[0];var longitude=_i$split2[1];
+	var categories=['B1','B2','B3','B4'];
+	for(var z in categories){
+	if(data[i].hasOwnProperty(categories[z])&&data[i][categories[z]]&&data[i][categories[z]]>0){
+	globe_data[categories[z]].push(parseFloat(latitude));
+	globe_data[categories[z]].push(parseFloat(longitude));
+	globe_data[categories[z]].push(parseFloat(data[i][categories[z]]));
+
+	}
+	}
+	}
 
 
 
-	}},{key:'render',value:function render()
 
+	this.setState({globe_data:globe_data});
+	}.bind(this)});
+
+
+	}},{key:'componentDidMount',value:function componentDidMount()
 	{
 
-	return _react2.default.createElement('div',null,'Test');
+
+
+
+
+
+
+
+
+
+
+	}},{key:'componentDidUpdate',value:function componentDidUpdate()
+	{
+	if(this.state.globe_data!=null){
+	this.globe=new DAT.Globe($(this.globe_div)[0],{colorFn:function colorFn(label){
+	return new THREE.Color([
+	0xd9d9d9,0xb6b4b5,0x9966cc,0x15adff,0x3e66a3,
+	0x216288,0xff7e7e,0xff1f13,0xc0120b,0x5a1301,0xffcc02,
+	0xedb113,0x9fce66,0x0c9a39,
+	0xfe9872,0x7f3f98,0xf26522,0x2bb673,0xd7df23,
+	0xe6b23a,0x7ed3f7][label]);
+	}});
+	for(var i in this.state.globe_data){
+	console.log(this.state.globe_data[i]);
+
+	}
+	this.globe.addData([[[22.3800000,114.1800000,15*200,22.2700000,166.4500000,4*200],{name:'Test',format:'legend',animated:true}],
+	[[22.3800000,114.1800000,15*200,22.2700000,166.4500000,4*200],{name:'Test',format:'legend',animated:true}]]);
+
+
+	this.globe.createPoints();
+	this.globe.animate();
+
+	}
+	}},{key:'render',value:function render()
+	{var _this2=this;
+
+	return _react2.default.createElement('div',{ref:function ref(input){return _this2.globe_div=input;},style:{"height":"400px"}},'Test');
 
 	}}]);return Globe;}(_react2.default.Component);exports.default=
 
