@@ -27023,10 +27023,22 @@
 	function Globe(props){_classCallCheck(this,Globe);var _this=_possibleConstructorReturn(this,(Globe.__proto__||Object.getPrototypeOf(Globe)).call(this,
 	props));
 	_this.state={globe_data:null};
-	_this.globe=null;return _this;
+	_this.globe=null;
+	_this.bubble_map=null;return _this;
 
 
-	}_createClass(Globe,[{key:'componentWillMount',value:function componentWillMount()
+	}_createClass(Globe,[{key:'componentDidMount',value:function componentDidMount()
+	{
+	this.bubble_map=new Datamap({element:document.getElementById('globe_div'),
+	fills:{
+	defaultFill:'#f7b98f',
+	'b1':'#2b8a1e',
+	'b2':'blue',
+	'b3':'orange',
+	'b4':'red'}});
+
+
+	}},{key:'componentWillMount',value:function componentWillMount()
 	{
 
 
@@ -27034,32 +27046,53 @@
 	'success':function(data){
 
 
-	var colors={
-	'B4':3,
-	'B3':2,
-	'B2':1,
-	'B1':0};
-
-	var globe_data={'B1':[],'B2':[],'B3':[],'B4':[]};
-	for(var i in data){var _i$split=
-	i.split(':');var _i$split2=_slicedToArray(_i$split,2);var latitude=_i$split2[0];var longitude=_i$split2[1];
-	var categories=['B1','B2','B3','B4'];
-	for(var z in categories){
-	if(data[i].hasOwnProperty(categories[z])&&data[i][categories[z]]&&data[i][categories[z]]>0){
-	globe_data[categories[z]].push(parseFloat(latitude));
-	globe_data[categories[z]].push(parseFloat(longitude));
-	globe_data[categories[z]].push(parseFloat(data[i][categories[z]]));
-	globe_data[categories[z]].push(colors[categories[z]]);
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	var globe_data=[];
+	var dc_details=data['dc_details'];
+	var stats_data=data['data_values'];
+
+	for(var i in dc_details){var _i$split=
+	i.split(':');var _i$split2=_slicedToArray(_i$split,2);var lat=_i$split2[0];var lon=_i$split2[1];
+	var name=dc_details[i]['dc_name']+'('+dc_details[i]['dc_id']+')';
+	var city=dc_details[i]['city'];
+	var state=dc_details[i]['state'];
+	var country=dc_details[i]['country'];
+	var b1=stats_data[dc_details[i]['dc_id']]['B1']?parseInt(stats_data[dc_details[i]['dc_id']]['B1']):0;
+	var b2=stats_data[dc_details[i]['dc_id']]['B2']?parseInt(stats_data[dc_details[i]['dc_id']]['B2']):0;
+	var b3=stats_data[dc_details[i]['dc_id']]['B3']?parseInt(stats_data[dc_details[i]['dc_id']]['B3']):0;
+	var b4=stats_data[dc_details[i]['dc_id']]['B4']?parseInt(stats_data[dc_details[i]['dc_id']]['B4']):0;
+	var fillkey='';
+	if(b4>b3&&b4>b2&&b2>b1){
+	fillkey='b4';
+	}else if(b3>b4&&b3>b2&&b3>b1){
+	fillkey='b3';
+	}else if(b2>b4&&b2>b3&&b2>b1){
+	fillkey='b2';
+	}else if(b1>b3&&b1>b2&&b1>b4){
+	fillkey='b1';
 	}
+	globe_data.push({'name':name,'radius':4,'city':city,'country':country,'latitude':lat,'longitude':lon,'b1':b1,'b2':b2,'b3':b3,'b4':b4,'fillKey':fillkey});
 	}
-	}
-
-
-
-
-	this.setState({globe_data:globe_data});
+	this.setState({'globe_data':globe_data});
 	}.bind(this)});
 
 
@@ -27077,23 +27110,27 @@
 	{
 	if(this.state.globe_data!=null){
 
-	this.globe=new DAT.Globe($(this.globe_div)[0],{colorFn:function colorFn(label){
-	console.log(label);
-	return new THREE.Color([0x20ea17,0x1719ea,0xea9017,0xea1739][label]);
+
+
+
+
+
+
+
+
+
+
+
+
+	this.bubble_map.bubbles(this.state.globe_data,{
+	popupTemplate:function popupTemplate(geo,data){
+	return'<div class="hoverinfo">'+data.name+', '+data.city+','+data.country+'<br/>B1:'+data.b1+'<br/>B2:'+data.b2+'<br/>B3:'+data.b3+'<br/>B4:'+data.b4;
 	}});
-	for(var i in this.state.globe_data){
-	this.globe.addData(this.state.globe_data[i],{name:i,format:'legend',animated:true});
-	}
 
-
-
-
-	this.globe.createPoints();
-	this.globe.animate();
 	}
 	}},{key:'render',value:function render()
 	{var _this2=this;
-	return _react2.default.createElement('div',{ref:function ref(input){return _this2.globe_div=input;},style:{"height":"400px"}},'Test');
+	return _react2.default.createElement('div',{id:'globe_div',ref:function ref(input){return _this2.globe_div=input;},style:{"height":"500px"}});
 	}}]);return Globe;}(_react2.default.Component);exports.default=
 
 

@@ -11,6 +11,10 @@ my $sql ="select a.DATA_CENTER_ID,
 GEOCODE_LATITUDE,
 GEOCODE_LONGITUDE,
 DATA_CENTER_NAME,
+GEOCODE_CITY,
+GEOCODE_STATE,
+GEOCODE_COUNTRY,
+GEOCODE_CONTINENT,
 score_bucket, 
 count(*) 
 from
@@ -31,12 +35,16 @@ where a.DATA_CENTER_ID=dc.DATA_CENTER_ID
 group by DATA_CENTER_ID,score_bucket";
 
 my $results = $dbh->selectall_arrayref($sql);
-my $results_formatted={};
+my $dc_details={}; my $data_set={};
 for my $row (@{$results}) {
     my $location=$row->[1].":".$row->[2];
-     $results_formatted->{$location}->{'dc_name'}=$row->[3];
-     $results_formatted->{$location}->{'dc_id'}=$row->[0];
-     $results_formatted->{$location}->{$row->[4]}=$row->[5];
+     $dc_details->{$location}->{'dc_name'}=$row->[3];
+     $dc_details->{$location}->{'dc_id'}=$row->[0];
+     $dc_details->{$location}->{'city'}=$row->[4];
+     $dc_details->{$location}->{'state'}=$row->[5];
+     $dc_details->{$location}->{'country'}=$row->[6];
+     $dc_details->{$location}->{'continent'}=$row->[7];
+    $data_set->{$row->[0]}->{$row->[8]}=$row->[9];
 }
-print encode_json($results_formatted);
+print encode_json( { dc_details => $dc_details , data_values => $data_set});
 
