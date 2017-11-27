@@ -27021,51 +27021,51 @@
 
 
 	function Globe(props){_classCallCheck(this,Globe);var _this=_possibleConstructorReturn(this,(Globe.__proto__||Object.getPrototypeOf(Globe)).call(this,
-	props));
-	_this.state={globe_data:null};
-	_this.globe=null;
-	_this.bubble_map=null;return _this;
+	props));_this.
 
 
-	}_createClass(Globe,[{key:'componentDidMount',value:function componentDidMount()
+
+
+
+	redraw=function(){
+	console.log('Redraw');
+	this.bubble_map.svg.select('g').selectAll('path').style('vector-effect','non-scaling-stroke');
+	this.rescaleWorld();
+	this.rescaleBubbles();
+	}.bind(_this);_this.
+
+	rescaleWorld=function(){
+	this.bubble_map.svg.selectAll('g').attr('transform','translate('+d3.event.translate+') scale('+d3.event.scale+')');
+	}.bind(_this);_this.
+	rescaleBubbles=function(){
+	var bubbleRadius=4;
+	var bubbleBorder=15;
+	this.bubble_map.svg.selectAll('.datamaps-bubble').attr('r',bubbleRadius/d3.event.scale);
+	}.bind(_this);_this.state={globe_data:null};_this.globe=null;_this.bubble_map=null;return _this;}_createClass(Globe,[{key:'componentDidMount',value:function componentDidMount()
 	{
 	this.bubble_map=new Datamap({element:document.getElementById('globe_div'),
 	fills:{
-	defaultFill:'#f7b98f',
+	defaultFill:'#ABDDA4',
 	'b1':'#2b8a1e',
 	'b2':'blue',
 	'b3':'orange',
-	'b4':'red'}});
+	'b4':'red'},
+
+	bubblesConfig:{
+	borderWidth:0}});
 
 
+	this.zoom=new Zoom({
+	$container:$('#globe_div'),
+	datamap:this.bubble_map});
+
+	this.bubble_map.svg.call(d3.behavior.zoom().on('zoom',this.redraw));
 	}},{key:'componentWillMount',value:function componentWillMount()
 	{
 
 
 	$.ajax({'url':'https://chetan-techjam.deploy.akamai.com/cgi/handle_globe_data.cgi',
 	'success':function(data){
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	var globe_data=[];
 	var dc_details=data['dc_details'];
 	var stats_data=data['data_values'];
@@ -27090,7 +27090,7 @@
 	}else if(b1>b3&&b1>b2&&b1>b4){
 	fillkey='b1';
 	}
-	globe_data.push({'name':name,'radius':4,'city':city,'country':country,'latitude':lat,'longitude':lon,'b1':b1,'b2':b2,'b3':b3,'b4':b4,'fillKey':fillkey});
+	globe_data.push({'name':name,'radius':6,'city':city,'country':country,'latitude':lat,'longitude':lon,'b1':b1,'b2':b2,'b3':b3,'b4':b4,'fillKey':fillkey});
 	}
 	this.setState({'globe_data':globe_data});
 	}.bind(this)});
@@ -27098,30 +27098,8 @@
 
 	}},{key:'componentDidUpdate',value:function componentDidUpdate()
 
-
-
-
-
-
-
-
-
-
 	{
 	if(this.state.globe_data!=null){
-
-
-
-
-
-
-
-
-
-
-
-
-
 	this.bubble_map.bubbles(this.state.globe_data,{
 	popupTemplate:function popupTemplate(geo,data){
 	return'<div class="hoverinfo">'+data.name+', '+data.city+','+data.country+'<br/>B1:'+data.b1+'<br/>B2:'+data.b2+'<br/>B3:'+data.b3+'<br/>B4:'+data.b4;
@@ -27129,6 +27107,7 @@
 
 	}
 	}},{key:'render',value:function render()
+
 	{var _this2=this;
 	return _react2.default.createElement('div',{id:'globe_div',ref:function ref(input){return _this2.globe_div=input;},style:{"height":"500px"}});
 	}}]);return Globe;}(_react2.default.Component);exports.default=
