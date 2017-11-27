@@ -27109,7 +27109,7 @@
 	}else if(b1>b3&&b1>b2&&b1>b4){
 	fillkey='b1';
 	}
-	globe_data.push({'name':name,'radius':6,'city':city,'country':country,'latitude':lat,'longitude':lon,'b1':b1,'b2':b2,'b3':b3,'b4':b4,'fillKey':fillkey});
+	globe_data.push({'name':name,'radius':8,'city':city,'country':country,'latitude':lat,'longitude':lon,'b1':b1,'b2':b2,'b3':b3,'b4':b4,'fillKey':fillkey});
 	}
 	this.setState({'globe_data':globe_data});
 	}.bind(this)});
@@ -27147,13 +27147,16 @@
 	var high=$(".h_charts").data('high');
 	var medium=$(".h_charts").data('medium');
 	var low=$(".h_charts").data('low');
+	console.log($(".h_charts"));
 	Highcharts.chart("h_charts",{
-	chart:{plotBackgroundColor:null,plotBorderWidth:null,plotShadow:false,type:"pie"},
+	chart:{plotBackgroundColor:null,plotBorderWidth:null,plotShadow:false,type:"pie",title:"DataCenter Health"},
 	pie:{cursor:'pointer',allowPointSelect:true,dataLabels:{enabled:true,format:'<b>{point.name}</b>:'}},
 	plotOptions:{pie:{allowPointSelect:true,cursor:"pointer",dataLabels:{enabled:false},showInLegend:true}},
-	series:[{name:"Probability",data:[{name:"Critical",y:critical},{name:"High",y:high},{name:"Medium",y:medium},{name:"low",y:low}]}]});
+	series:[{name:"Probability",data:[{name:"Critical",y:critical,color:"red"},{name:"High",y:high,color:"orange"},{name:"Medium",y:medium,color:"blue"},{name:"low",y:low,color:"green"}]}]});
 
 
+	}else{
+	console.log('Not Found');
 	}
 	});
 
