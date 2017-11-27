@@ -12,6 +12,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
 <script src="/datamaps.world.hires.min.js"></script>
 <script src="/zoom.js"></script>
+<script src="https://code.highcharts.com/highcharts.src.js"></script>
 </head>
 <body>
  <div id="app-header" >
@@ -29,8 +30,8 @@
                               'data-title': 'Server LifeCycle',
                             };
         NIE.React.renderLayout( document.getElementById('app-header'), layoutConfig );
+        var DrawChart = Highcharts.chart;
         })();
 </script>
  <script type='text/javascript' src='/dist/srv_life_bundle.js' ></script> 
-
 </html>

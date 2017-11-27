@@ -27017,6 +27017,7 @@
 	'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _slicedToArray=function(){function sliceIterator(arr,i){var _arr=[];var _n=true;var _d=false;var _e=undefined;try{for(var _i=arr[typeof Symbol==='function'?Symbol.iterator:'@@iterator'](),_s;!(_n=(_s=_i.next()).done);_n=true){_arr.push(_s.value);if(i&&_arr.length===i)break;}}catch(err){_d=true;_e=err;}finally{try{if(!_n&&_i["return"])_i["return"]();}finally{if(_d)throw _e;}}return _arr;}return function(arr,i){if(Array.isArray(arr)){return arr;}else if((typeof Symbol==='function'?Symbol.iterator:'@@iterator')in Object(arr)){return sliceIterator(arr,i);}else{throw new TypeError("Invalid attempt to destructure non-iterable instance");}};}();var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _react=__webpack_require__(1);var _react2=_interopRequireDefault(_react);
 	var _reactDom=__webpack_require__(34);var _reactDom2=_interopRequireDefault(_reactDom);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var
 
+
 	Globe=function(_React$Component){_inherits(Globe,_React$Component);
 
 
@@ -27027,8 +27028,26 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	redraw=function(){
-	console.log('Redraw');
 	this.bubble_map.svg.select('g').selectAll('path').style('vector-effect','non-scaling-stroke');
 	this.rescaleWorld();
 	this.rescaleBubbles();
@@ -27041,7 +27060,7 @@
 	var bubbleRadius=4;
 	var bubbleBorder=15;
 	this.bubble_map.svg.selectAll('.datamaps-bubble').attr('r',bubbleRadius/d3.event.scale);
-	}.bind(_this);_this.state={globe_data:null};_this.globe=null;_this.bubble_map=null;return _this;}_createClass(Globe,[{key:'componentDidMount',value:function componentDidMount()
+	}.bind(_this);_this.state={globe_data:null};_this.globe=null;_this.bubble_map=null;_this.HighChartsOptions={chart:{plotBackgroundColor:null,plotBorderWidth:null,plotShadow:false,type:'pie'},plotOptions:{pie:{allowPointSelect:true,cursor:'pointer',dataLabels:{enabled:false},showInLegend:true}},series:{}};return _this;}_createClass(Globe,[{key:'componentDidMount',value:function componentDidMount()
 	{
 	this.bubble_map=new Datamap({element:document.getElementById('globe_div'),
 	fills:{
@@ -27098,18 +27117,51 @@
 
 	}},{key:'componentDidUpdate',value:function componentDidUpdate()
 
+
+
+
+
+
+
+
+
+
 	{
 	if(this.state.globe_data!=null){
+
 	this.bubble_map.bubbles(this.state.globe_data,{
 	popupTemplate:function popupTemplate(geo,data){
-	return'<div class="hoverinfo">'+data.name+', '+data.city+','+data.country+'<br/>B1:'+data.b1+'<br/>B2:'+data.b2+'<br/>B3:'+data.b3+'<br/>B4:'+data.b4;
+	var return_string='<div class="hoverinfo">'+data.name+','+data.city+','+data.country+
+	'<div  class="h_charts" id="h_charts" data-critical="'+data.b4+'" data-high="'+data.b3+'" data-medium="'+data.b2+'" data-low="'+data.b1+'">Test</div></div>';
+
+
+
+
+
+	return return_string;
 	}});
+
+	$(".datamaps-bubble").hover(function(){
+	if($(".h_charts").length==1){
+	var critical=$(".h_charts").data('critical');
+	var high=$(".h_charts").data('high');
+	var medium=$(".h_charts").data('medium');
+	var low=$(".h_charts").data('low');
+	Highcharts.chart("h_charts",{
+	chart:{plotBackgroundColor:null,plotBorderWidth:null,plotShadow:false,type:"pie"},
+	pie:{cursor:'pointer',allowPointSelect:true,dataLabels:{enabled:true,format:'<b>{point.name}</b>:'}},
+	plotOptions:{pie:{allowPointSelect:true,cursor:"pointer",dataLabels:{enabled:false},showInLegend:true}},
+	series:[{name:"Probability",data:[{name:"Critical",y:critical},{name:"High",y:high},{name:"Medium",y:medium},{name:"low",y:low}]}]});
+
+
+	}
+	});
 
 	}
 	}},{key:'render',value:function render()
 
 	{var _this2=this;
-	return _react2.default.createElement('div',{id:'globe_div',ref:function ref(input){return _this2.globe_div=input;},style:{"height":"500px"}});
+	return _react2.default.createElement('div',{id:'globe_div',ref:function ref(input){return _this2.globe_div=input;},style:{"height":"300px"}});
 	}}]);return Globe;}(_react2.default.Component);exports.default=
 
 

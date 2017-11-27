@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+//import Pie from './pie_charts';
 
 class Globe extends React.Component{
 
@@ -9,10 +10,28 @@ class Globe extends React.Component{
         this.state={ globe_data:null };
         this.globe=null;
         this.bubble_map = null;
+        this.HighChartsOptions= {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie',
+            },
+            plotOptions: {
+            pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: false
+                    },
+                    showInLegend: true
+            }
+            },
+            series:{},
 
+        };
     }
     redraw= function() {
-              console.log('Redraw');
               this.bubble_map.svg.select('g').selectAll('path').style('vector-effect', 'non-scaling-stroke');
               this.rescaleWorld();
               this.rescaleBubbles();
@@ -81,19 +100,52 @@ class Globe extends React.Component{
         });        
 
     }
+    /*popupTemplate=function(geo,data) {
+            console.log(data);
+            let hoverOn=<Pie critical={data.B4} high={data.B3} medium={data.B2} low={data.B1} ></Pie>;
+/*<div class="hoverinfo"> 
+                                    {data.name} , {data.city} , {data.country}
+                            </div>;
+            console.log(hoverOn);
+            return hoverOn  
 
+    }.bind(this);*/
     componentDidUpdate () {
         if ( this.state.globe_data != null  ) {
+            
             this.bubble_map.bubbles(this.state.globe_data,{
-                popupTemplate: function(geo, data) {
-                    return '<div class="hoverinfo">' + data.name + ', ' + data.city + ','  + data.country + '<br/>B1:'+data.b1 +'<br/>B2:'+data.b2+'<br/>B3:'+data.b3+'<br/>B4:'+data.b4
+                popupTemplate: function(geo,data) {
+                   var return_string=  '<div class="hoverinfo">'+data.name+','+data.city+','+data.country+
+                            '<div  class="h_charts" id="h_charts" data-critical="'+data.b4+'" data-high="'+data.b3+'" data-medium="'+data.b2+'" data-low="'+data.b1+'">Test</div></div>';
+                            /*<script> (function() {console.log("Inside Script");'+
+                                'Highcharts.chart("h_charts",{ chart: {plotBackgroundColor: null, plotBorderWidth: null, plotShadow: false, type: "pie" },'+
+                                            'plotOptions: { pie: { allowPointSelect: true, cursor: "pointer", dataLabels: { enabled: false }, showInLegend: true } },'+
+                                            'series:[ { name: "Critical", y: '+data.b4+' }, { name: "High", y:'+data.b3+'}, { name: "Medium", y:'+ data.b2+' }, { name: "Low", y:'+ data.b1+'}]});})(); '+
+                             '</script>' ;*/
+                       return return_string; 
                 }
             });
+            $(".datamaps-bubble").hover(function() { 
+                if ( $(".h_charts").length == 1 ) {
+                    var critical = $(".h_charts").data('critical');
+                    var high = $(".h_charts").data('high');
+                    var medium = $(".h_charts").data('medium');
+                    var low = $(".h_charts").data('low');
+                    Highcharts.chart("h_charts",{
+                                chart: {plotBackgroundColor: null, plotBorderWidth: null, plotShadow: false, type: "pie" },
+                                pie:{cursor: 'pointer', allowPointSelect: true, dataLabels: { enabled: true, format: '<b>{point.name}</b>:' , }},
+                                plotOptions: { pie: { allowPointSelect: true, cursor: "pointer", dataLabels: { enabled: false }, showInLegend: true } },
+                                series:[{ name:"Probability", data:[ { name: "Critical", y: critical } , { name: "High", y: high }, { name: "Medium", y: medium },{ name: "low", y: low }]
+                    }]});
+
+                }
+        });
+                        
         }
   }
 
   render(){
-        return(<div id='globe_div' ref={(input)=>this.globe_div=input} style={{"height":"500px"}} ></div>);
+        return(<div id='globe_div' ref={(input)=>this.globe_div=input} style={{"height":"300px"}} ></div>);
   }
 
 }
