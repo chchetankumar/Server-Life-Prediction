@@ -1,7 +1,7 @@
 module.exports = {
     entry: './src/srv_life.js',
     output : {
-        path: './dist',
+        path: '/u0/sbayya/techjam/Server-Life-Prediction/dist',
         filename: 'srv_life_bundle.js'
     },
 
