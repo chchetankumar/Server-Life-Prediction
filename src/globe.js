@@ -76,6 +76,9 @@ class Globe extends React.Component{
                             'b3': 'orange',
                             'b4': 'red'
                         } ,
+                        geographyConfig: {
+                            popupOnHover: false,
+                        },
                         bubblesConfig: {
                             borderWidth: 0,
                         },
@@ -134,14 +137,21 @@ class Globe extends React.Component{
                     var high = $(".h_charts").data('high');
                     var medium = $(".h_charts").data('medium');
                     var low = $(".h_charts").data('low');
+                    var series_data = [];
+                    if (critical > 0){ series_data.push({ name: "Critical", y: critical, color:"red" }) };
+                    if (high > 0){ series_data.push({ name: "High", y: high,color:"orange" }) };
+                    if (medium > 0){ series_data.push({ name: "Medium", y: medium, color:"blue" }) };
+                    if (low > 0){ series_data.push({ name: "Low", y: low,color:"green" }) }; 
                     Highcharts.chart("h_charts",{
-                                chart: {plotBackgroundColor: null, plotBorderWidth: null, plotShadow: false, type: "pie", title:"DataCenter Health" },
-
-                                legend: { align: 'center' },
+                                chart: {plotBackgroundColor: null, plotBorderWidth: null, plotShadow: false, type: "pie"},
+                                title:{text:"Datacenter server health " + bubble.name},
+                                credits: {enabled: false},
+                                legend: {labelFormatter: function () { return this.name + ' ['+this.y+' '+(this.y>1?'servers':'server')+']';}},
                                 pie:{cursor: 'pointer', allowPointSelect: true, dataLabels: { enabled: true, format: '<b>{point.name}</b>:'  }},
                                 plotOptions: { pie: { allowPointSelect: true, cursor: "pointer", dataLabels: { enabled: false }, showInLegend: true } },
-                                series:[{ name:"Probability", data:[ { name: "Critical", y: critical, color:"red" } , { name: "High", y: high,color:"orange" }, { name: "Medium", y: medium, color:"blue" },{ name: "low", y: low,color:"green" }]
-                    }]});
+                                 series:[{ name:"Probability", data:series_data }],
+                                //series:[{ name:"Probability", data:[ { name: "Critical", y: critical, color:"red" } , { name: "High", y: high,color:"orange" }, { name: "Medium", y: medium, color:"blue" },{ name: "low", y: low,color:"green" }]
+                    });
 
         });
         d3.selectAll('.datamaps-bubble').on("mouseleave", function() {
@@ -168,6 +178,7 @@ class Globe extends React.Component{
         if ( this.state.globe_data != null  ) {
             
             this.bubble_map.bubbles(this.state.globe_data,{
+                geographyConfig: { popupOnHover: false},
                /*popupTemplate: function(geo,data) {
                    var return_string=  '<div class="hoverinfo">'+data.name+','+data.city+','+data.country+
                             '<div  class="h_charts" id="h_charts" data-critical="'+data.b4+'" data-high="'+data.b3+'" data-medium="'+data.b2+'" data-low="'+data.b1+'">Test</div></div>';
