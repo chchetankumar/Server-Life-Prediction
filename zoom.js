@@ -25,7 +25,6 @@ Zoom.prototype.init = function() {
 
   this.scale.set = this._getScalesArray();
   this.d3Zoom = d3.behavior.zoom().scaleExtent([ 1, this.scale.max ]);
-
   this._displayPercentage(1);
   this.listen();
 };
@@ -46,7 +45,6 @@ Zoom.prototype._handleScroll = function() {
   var translate = d3.event.translate,
       scale = d3.event.scale,
       limited = this._bound(translate, scale);
-
   this.scrolled = true;
 
   this._update(limited.translate, limited.scale);
@@ -91,6 +89,7 @@ l = [ translate0[0] * view.k + view.x, translate0[1] * view.k + view.y ];
 };
 
 Zoom.prototype._bound = function(translate, scale) {
+    console.log('Inside _bound');
   var width = this.$container.width(),
       height = this.$container.height();
 
@@ -99,12 +98,13 @@ Zoom.prototype._bound = function(translate, scale) {
     Math.max( width * (1 - scale), translate[0] )
   );
 
-  translate[1] = Math.min(0, Math.max(height * (1 - scale), translate[1]));
+  translate[1] = Math.min(1, Math.max(height * (1 - scale), translate[1]));
 
   return { translate: translate, scale: scale };
 };
 
 Zoom.prototype._update = function(translate, scale) {
+  console.log(scale);
   this.d3Zoom
     .translate(translate)
     .scale(scale);
@@ -152,7 +152,7 @@ Zoom.prototype._getNextScale = function(direction) {
       currentScale = this.d3Zoom.scale(),
       lastShift = scaleSet.length - 1,
       shift, temp = [];
-
+  console.log(currentScale);
   if (this.scrolled) {
 
     for (shift = 0; shift <= lastShift; shift++) {

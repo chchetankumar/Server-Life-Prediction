@@ -47,15 +47,19 @@
 	'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _react=__webpack_require__(1);var _react2=_interopRequireDefault(_react);
 	var _reactDom=__webpack_require__(34);var _reactDom2=_interopRequireDefault(_reactDom);
 	var _reactRouter=__webpack_require__(172);
-	var _globe=__webpack_require__(235);var _globe2=_interopRequireDefault(_globe);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var
-
+	var _globe=__webpack_require__(235);var _globe2=_interopRequireDefault(_globe);
+	var _dc_details=__webpack_require__(236);var _dc_details2=_interopRequireDefault(_dc_details);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var
 	SrvLife=function(_React$Component){_inherits(SrvLife,_React$Component);
 
 	function SrvLife(){_classCallCheck(this,SrvLife);return _possibleConstructorReturn(this,(SrvLife.__proto__||Object.getPrototypeOf(SrvLife)).call(this));
 
 	}_createClass(SrvLife,[{key:'render',value:function render()
 	{
-	return _react2.default.createElement(_globe2.default,null);
+	return _react2.default.createElement(_reactRouter.Router,{history:_reactRouter.hashHistory},
+	_react2.default.createElement(_reactRouter.Route,{path:'/',component:_globe2.default},
+	_react2.default.createElement(_reactRouter.Route,{path:'dc_details/:dc_id',component:_dc_details2.default})));
+
+
 
 	}}]);return SrvLife;}(_react2.default.Component);exports.default=
 
@@ -27051,71 +27055,125 @@
 	this.bubble_map.svg.select('g').selectAll('path').style('vector-effect','non-scaling-stroke');
 	this.rescaleWorld();
 	this.rescaleBubbles();
+	this.setEvents();
 	}.bind(_this);_this.
 
 	rescaleWorld=function(){
+	if(d3.event.scale>0.8){
 	this.bubble_map.svg.selectAll('g').attr('transform','translate('+d3.event.translate+') scale('+d3.event.scale+')');
+	}
 	}.bind(_this);_this.
 	rescaleBubbles=function(){
 	var bubbleRadius=4;
 	var bubbleBorder=15;
+	if(d3.event.scale>0.8){
 	this.bubble_map.svg.selectAll('.datamaps-bubble').attr('r',bubbleRadius/d3.event.scale);
-	}.bind(_this);_this.state={globe_data:null};_this.globe=null;_this.bubble_map=null;_this.HighChartsOptions={chart:{plotBackgroundColor:null,plotBorderWidth:null,plotShadow:false,type:'pie'},plotOptions:{pie:{allowPointSelect:true,cursor:'pointer',dataLabels:{enabled:false},showInLegend:true}},series:{}};return _this;}_createClass(Globe,[{key:'componentDidMount',value:function componentDidMount()
-	{
-	this.bubble_map=new Datamap({element:document.getElementById('globe_div'),
-	fills:{
-	defaultFill:'#ABDDA4',
-	'b1':'#2b8a1e',
-	'b2':'blue',
-	'b3':'orange',
-	'b4':'red'},
-
-	bubblesConfig:{
-	borderWidth:0}});
-
-
-	this.zoom=new Zoom({
-	$container:$('#globe_div'),
-	datamap:this.bubble_map});
-
-	this.bubble_map.svg.call(d3.behavior.zoom().on('zoom',this.redraw));
-	}},{key:'componentWillMount',value:function componentWillMount()
-	{
-
-
-	$.ajax({'url':'https://chetan-techjam.deploy.akamai.com/cgi/handle_globe_data.cgi',
-	'success':function(data){
-	var globe_data=[];
-	var dc_details=data['dc_details'];
-	var stats_data=data['data_values'];
-
-	for(var i in dc_details){var _i$split=
-	i.split(':');var _i$split2=_slicedToArray(_i$split,2);var lat=_i$split2[0];var lon=_i$split2[1];
-	var name=dc_details[i]['dc_name']+'('+dc_details[i]['dc_id']+')';
-	var city=dc_details[i]['city'];
-	var state=dc_details[i]['state'];
-	var country=dc_details[i]['country'];
-	var b1=stats_data[dc_details[i]['dc_id']]['B1']?parseInt(stats_data[dc_details[i]['dc_id']]['B1']):0;
-	var b2=stats_data[dc_details[i]['dc_id']]['B2']?parseInt(stats_data[dc_details[i]['dc_id']]['B2']):0;
-	var b3=stats_data[dc_details[i]['dc_id']]['B3']?parseInt(stats_data[dc_details[i]['dc_id']]['B3']):0;
-	var b4=stats_data[dc_details[i]['dc_id']]['B4']?parseInt(stats_data[dc_details[i]['dc_id']]['B4']):0;
-	var fillkey='';
-	if(b4>b3&&b4>b2&&b2>b1){
-	fillkey='b4';
-	}else if(b3>b4&&b3>b2&&b3>b1){
-	fillkey='b3';
-	}else if(b2>b4&&b2>b3&&b2>b1){
-	fillkey='b2';
-	}else if(b1>b3&&b1>b2&&b1>b4){
-	fillkey='b1';
 	}
-	globe_data.push({'name':name,'radius':8,'city':city,'country':country,'latitude':lat,'longitude':lon,'b1':b1,'b2':b2,'b3':b3,'b4':b4,'fillKey':fillkey});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	}.bind(_this);_this.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	setEvents=function(){
+	d3.selectAll('.datamaps-bubble').on("mouseenter",function(bubble){
+	if($("#h_charts").length==1){
+	$("#h_charts").remove();
 	}
-	this.setState({'globe_data':globe_data});
-	}.bind(this)});
+	var hoverover=$('<div />').addClass('h_charts').attr('id','h_charts').attr('data-critical',bubble.b4).attr('data-high',bubble.b3).attr('data-medium',bubble.b2).attr('data-low',bubble.b1).css("position","absolute").css("left",d3.event.pageX).css("top",d3.event.pageY).appendTo($('body'));
+	var critical=$(".h_charts").data('critical');
+	var high=$(".h_charts").data('high');
+	var medium=$(".h_charts").data('medium');
+	var low=$(".h_charts").data('low');
+	Highcharts.chart("h_charts",{
+	chart:{plotBackgroundColor:null,plotBorderWidth:null,plotShadow:false,type:"pie",title:"DataCenter Health"},
+
+	legend:{align:'center'},
+	pie:{cursor:'pointer',allowPointSelect:true,dataLabels:{enabled:true,format:'<b>{point.name}</b>:'}},
+	plotOptions:{pie:{allowPointSelect:true,cursor:"pointer",dataLabels:{enabled:false},showInLegend:true}},
+	series:[{name:"Probability",data:[{name:"Critical",y:critical,color:"red"},{name:"High",y:high,color:"orange"},{name:"Medium",y:medium,color:"blue"},{name:"low",y:low,color:"green"}]}]});
 
 
-	}},{key:'componentDidUpdate',value:function componentDidUpdate()
+	});
+	d3.selectAll('.datamaps-bubble').on("mouseleave",function(){
+	if($("#h_charts").length==1){
+	$("#h_charts").remove();
+	}
+	});
+	d3.selectAll('.datamaps-bubble').on("click",function(bubble){
+	window.location.href='/#/dc_details/'+bubble.dc_id;
+	});
+	}.bind(_this);_this.state={globe_data:null};_this.globe=null;_this.bubble_map=null;_this.HighChartsOptions={chart:{plotBackgroundColor:null,plotBorderWidth:null,plotShadow:false,type:'pie'},plotOptions:{pie:{allowPointSelect:true,cursor:'pointer',dataLabels:{enabled:false},showInLegend:true}},series:{}};return _this;}_createClass(Globe,[{key:'componentDidMount',value:function componentDidMount(){this.bubble_map=new Datamap({element:document.getElementById('globe_div'),fills:{defaultFill:'#ABDDA4','b1':'#2b8a1e','b2':'blue','b3':'orange','b4':'red'},bubblesConfig:{borderWidth:0}});this.bubble_map.svg.call(d3.behavior.zoom().on('zoom',this.redraw));}},{key:'componentWillMount',value:function componentWillMount(){$.ajax({'url':'https://chetan-techjam.deploy.akamai.com/cgi/handle_globe_data.cgi','success':function(data){var globe_data=[];var dc_details=data['dc_details'];var stats_data=data['data_values'];for(var i in dc_details){var _i$split=i.split(':');var _i$split2=_slicedToArray(_i$split,2);var lat=_i$split2[0];var lon=_i$split2[1];var name=dc_details[i]['dc_name']+'('+dc_details[i]['dc_id']+')';var city=dc_details[i]['city'];var state=dc_details[i]['state'];var country=dc_details[i]['country'];var dc_id=dc_details[i]['dc_id'];var b1=stats_data[dc_details[i]['dc_id']]['B1']?parseInt(stats_data[dc_details[i]['dc_id']]['B1']):0;var b2=stats_data[dc_details[i]['dc_id']]['B2']?parseInt(stats_data[dc_details[i]['dc_id']]['B2']):0;var b3=stats_data[dc_details[i]['dc_id']]['B3']?parseInt(stats_data[dc_details[i]['dc_id']]['B3']):0;var b4=stats_data[dc_details[i]['dc_id']]['B4']?parseInt(stats_data[dc_details[i]['dc_id']]['B4']):0;var fillkey='';var total=b1+b2+b3+b4;if(b4+b3>0.8*total){fillkey='b4';}else if(b4+b3>0.6*total){fillkey='b3';}else if(b4+b3>0.4*total){fillkey='b2';}else{fillkey='b1';}globe_data.push({'name':name,'dc_id':dc_id,'radius':4,'city':city,'country':country,'latitude':lat,'longitude':lon,'b1':b1,'b2':b2,'b3':b3,'b4':b4,'fillKey':fillkey});}this.setState({'globe_data':globe_data});}.bind(this)});}},{key:'componentDidUpdate',value:function componentDidUpdate()
+
 
 
 
@@ -27129,48 +27187,98 @@
 	{
 	if(this.state.globe_data!=null){
 
-	this.bubble_map.bubbles(this.state.globe_data,{
-	popupTemplate:function popupTemplate(geo,data){
-	var return_string='<div class="hoverinfo">'+data.name+','+data.city+','+data.country+
-	'<div  class="h_charts" id="h_charts" data-critical="'+data.b4+'" data-high="'+data.b3+'" data-medium="'+data.b2+'" data-low="'+data.b1+'">Test</div></div>';
+	this.bubble_map.bubbles(this.state.globe_data,{});
 
 
 
 
 
-	return return_string;
-	}});
-
-	$(".datamaps-bubble").hover(function(){
-	if($(".h_charts").length==1){
-	var critical=$(".h_charts").data('critical');
-	var high=$(".h_charts").data('high');
-	var medium=$(".h_charts").data('medium');
-	var low=$(".h_charts").data('low');
-	console.log($(".h_charts"));
-	Highcharts.chart("h_charts",{
-	chart:{plotBackgroundColor:null,plotBorderWidth:null,plotShadow:false,type:"pie",title:"DataCenter Health"},
-	pie:{cursor:'pointer',allowPointSelect:true,dataLabels:{enabled:true,format:'<b>{point.name}</b>:'}},
-	plotOptions:{pie:{allowPointSelect:true,cursor:"pointer",dataLabels:{enabled:false},showInLegend:true}},
-	series:[{name:"Probability",data:[{name:"Critical",y:critical,color:"red"},{name:"High",y:high,color:"orange"},{name:"Medium",y:medium,color:"blue"},{name:"low",y:low,color:"green"}]}]});
 
 
-	}else{
-	console.log('Not Found');
-	}
-	});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	}
 	}},{key:'render',value:function render()
 
 	{var _this2=this;
-	return _react2.default.createElement('div',{id:'globe_div',ref:function ref(input){return _this2.globe_div=input;},style:{"height":"300px"}});
+	return _react2.default.createElement('div',{className:'widget-container clearfix'},
+	_react2.default.createElement('div',{className:'widget-title'},'Server Failure Probability'),
+
+
+	_react2.default.createElement('div',{id:'globe_div',ref:function ref(input){return _this2.globe_div=input;},style:{"height":"450px","textAlign":"center"}}),
+	this.props.children);
+
+
 	}}]);return Globe;}(_react2.default.Component);exports.default=
 
 
 
 
 	Globe;
+
+/***/ },
+/* 236 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();var _react=__webpack_require__(1);var _react2=_interopRequireDefault(_react);function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{default:obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var
+
+
+
+	DcDetails=function(_React$Component){_inherits(DcDetails,_React$Component);
+
+	function DcDetails(props){_classCallCheck(this,DcDetails);var _this=_possibleConstructorReturn(this,(DcDetails.__proto__||Object.getPrototypeOf(DcDetails)).call(this,
+	props));
+	_this.state={'dc_id':_this.props.dc_id,
+	'dc_name':_this.props.dc_name,
+	'server_info':[]};return _this;
+
+
+	}_createClass(DcDetails,[{key:'componentWillMount',value:function componentWillMount()
+
+	{
+
+
+	}},{key:'render',value:function render()
+	{
+	return _react2.default.createElement('div',{className:'widget-container'},
+	_react2.default.createElement('div',{className:'widget-title'},'Server Health Status is DC ',
+	this.state.dc_name));
+
+
+
+
+	}}]);return DcDetails;}(_react2.default.Component);exports.default=
+
+
+
+
+	DcDetails;
 
 /***/ }
 /******/ ]);
