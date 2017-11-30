@@ -71,7 +71,7 @@ class Globe extends React.Component{
     componentDidMount(){
          this.bubble_map = new Datamap({element: document.getElementById('globe_div'),
                         fills: {
-                            defaultFill: '#ABDDA4',
+                            defaultFill: '#c5e8ed',
                             'b1': '#2b8a1e',
                             'b2': 'blue',
                             'b3': 'orange',
