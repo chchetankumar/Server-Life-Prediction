@@ -135,7 +135,12 @@ class Globe extends React.Component{
                 if ( $("#h_charts").length == 1 ) {
                     $("#h_charts").remove();
                 }
-                var hoverover = $('<div />').addClass('h_charts').attr('id','h_charts').attr('data-critical',bubble.b4).attr('data-high',bubble.b3).attr('data-medium',bubble.b2).attr('data-low',bubble.b1).css("position","absolute").css("left",d3.event.pageX).css("top",d3.event.pageY).appendTo($('body'));
+                var scrn_width=screen.width;
+                var pageX=d3.event.pageX;
+                if ( (scrn_width - d3.event.pageX) < 450 ) {
+                        pageX=d3.event.pageX - (450 - (scrn_width-d3.event.pageX));
+                }
+                var hoverover = $('<div />').addClass('h_charts').attr('id','h_charts').attr('data-critical',bubble.b4).attr('data-high',bubble.b3).attr('data-medium',bubble.b2).attr('data-low',bubble.b1).css("position","absolute").css("left",pageX).css("top",d3.event.pageY).appendTo($('body'));
                     var critical = $(".h_charts").data('critical');
                     var high = $(".h_charts").data('high');
                     var medium = $(".h_charts").data('medium');
