@@ -27258,7 +27258,7 @@
 	_react2.default.createElement('div',{className:'circle green'}),' ',_react2.default.createElement('div',{className:'left'},' 0-40%'),
 	_react2.default.createElement('div',{className:'circle blue'}),' ',_react2.default.createElement('div',{className:'left'},' 40-60% '),
 	_react2.default.createElement('div',{className:'circle orange'}),' ',_react2.default.createElement('div',{className:'left'},' 60-80% '),
-	_react2.default.createElement('div',{className:'circle red'}),' ',_react2.default.createElement('div',{className:'left'},' 80-100% ')),
+	_react2.default.createElement('div',{className:'circle red'}),' ',_react2.default.createElement('div',{className:'left'},' 80-100% - of servers have failure probability > 60% ')),
 
 	_react2.default.createElement('div',{style:{"margin-top":"20px"}},
 	this.props.children));

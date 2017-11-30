@@ -238,7 +238,7 @@ class Globe extends React.Component{
             <div className="circle green"></div> <div className="left"> 0-40%</div> 
             <div className="circle blue"></div> <div className="left"> 40-60% </div>
             <div className="circle orange"></div> <div className="left"> 60-80% </div>
-            <div className="circle red"></div> <div className="left"> 80-100% </div>
+            <div className="circle red"></div> <div className="left"> 80-100% - of servers have failure probability > 60% </div>
             </div>
             <div style={{"margin-top" : "20px"}}>
             {this.props.children}
