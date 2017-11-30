@@ -27069,24 +27069,30 @@
 	if(d3.event.scale>0.8){
 	this.bubble_map.svg.selectAll('.datamaps-bubble').attr('r',bubbleRadius/d3.event.scale);
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	}.bind(_this);_this.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -27154,13 +27160,20 @@
 	var high=$(".h_charts").data('high');
 	var medium=$(".h_charts").data('medium');
 	var low=$(".h_charts").data('low');
+	var series_data=[];
+	if(critical>0){series_data.push({name:"Critical",y:critical,color:"red"});};
+	if(high>0){series_data.push({name:"High",y:high,color:"orange"});};
+	if(medium>0){series_data.push({name:"Medium",y:medium,color:"blue"});};
+	if(low>0){series_data.push({name:"Low",y:low,color:"green"});};
 	Highcharts.chart("h_charts",{
-	chart:{plotBackgroundColor:null,plotBorderWidth:null,plotShadow:false,type:"pie",title:"DataCenter Health"},
-
-	legend:{align:'center'},
+	chart:{plotBackgroundColor:null,plotBorderWidth:null,plotShadow:false,type:"pie"},
+	title:{text:"Datacenter server health <br/>"+bubble.name},
+	credits:{enabled:false},
+	legend:{labelFormatter:function labelFormatter(){return this.name+' ['+this.y+' '+(this.y>1?'servers':'server')+']';}},
 	pie:{cursor:'pointer',allowPointSelect:true,dataLabels:{enabled:true,format:'<b>{point.name}</b>:'}},
 	plotOptions:{pie:{allowPointSelect:true,cursor:"pointer",dataLabels:{enabled:false},showInLegend:true}},
-	series:[{name:"Probability",data:[{name:"Critical",y:critical,color:"red"},{name:"High",y:high,color:"orange"},{name:"Medium",y:medium,color:"blue"},{name:"low",y:low,color:"green"}]}]});
+	series:[{name:"Probability",data:series_data}]});
+
 
 
 	});
@@ -27172,7 +27185,7 @@
 	d3.selectAll('.datamaps-bubble').on("click",function(bubble){
 	window.location.href='/#/dc_details/'+bubble.dc_id;
 	});
-	}.bind(_this);_this.state={globe_data:null};_this.globe=null;_this.bubble_map=null;_this.HighChartsOptions={chart:{plotBackgroundColor:null,plotBorderWidth:null,plotShadow:false,type:'pie'},plotOptions:{pie:{allowPointSelect:true,cursor:'pointer',dataLabels:{enabled:false},showInLegend:true}},series:{}};return _this;}_createClass(Globe,[{key:'componentDidMount',value:function componentDidMount(){this.bubble_map=new Datamap({element:document.getElementById('globe_div'),fills:{defaultFill:'#ABDDA4','b1':'#2b8a1e','b2':'blue','b3':'orange','b4':'red'},bubblesConfig:{borderWidth:0}});this.bubble_map.svg.call(d3.behavior.zoom().on('zoom',this.redraw));}},{key:'componentWillMount',value:function componentWillMount(){$.ajax({'url':'https://chetan-techjam.deploy.akamai.com/cgi/handle_globe_data.cgi','success':function(data){var globe_data=[];var dc_details=data['dc_details'];var stats_data=data['data_values'];for(var i in dc_details){var _i$split=i.split(':');var _i$split2=_slicedToArray(_i$split,2);var lat=_i$split2[0];var lon=_i$split2[1];var name=dc_details[i]['dc_name']+'('+dc_details[i]['dc_id']+')';var city=dc_details[i]['city'];var state=dc_details[i]['state'];var country=dc_details[i]['country'];var dc_id=dc_details[i]['dc_id'];var b1=stats_data[dc_details[i]['dc_id']]['B1']?parseInt(stats_data[dc_details[i]['dc_id']]['B1']):0;var b2=stats_data[dc_details[i]['dc_id']]['B2']?parseInt(stats_data[dc_details[i]['dc_id']]['B2']):0;var b3=stats_data[dc_details[i]['dc_id']]['B3']?parseInt(stats_data[dc_details[i]['dc_id']]['B3']):0;var b4=stats_data[dc_details[i]['dc_id']]['B4']?parseInt(stats_data[dc_details[i]['dc_id']]['B4']):0;var fillkey='';var total=b1+b2+b3+b4;if(b4+b3>0.8*total){fillkey='b4';}else if(b4+b3>0.6*total){fillkey='b3';}else if(b4+b3>0.4*total){fillkey='b2';}else{fillkey='b1';}globe_data.push({'name':name,'dc_id':dc_id,'radius':4,'city':city,'country':country,'latitude':lat,'longitude':lon,'b1':b1,'b2':b2,'b3':b3,'b4':b4,'fillKey':fillkey});}this.setState({'globe_data':globe_data});}.bind(this)});}},{key:'componentDidUpdate',value:function componentDidUpdate()
+	}.bind(_this);_this.state={globe_data:null};_this.globe=null;_this.bubble_map=null;_this.HighChartsOptions={chart:{plotBackgroundColor:null,plotBorderWidth:null,plotShadow:false,type:'pie'},plotOptions:{pie:{allowPointSelect:true,cursor:'pointer',dataLabels:{enabled:false},showInLegend:true}},series:{}};return _this;}_createClass(Globe,[{key:'componentDidMount',value:function componentDidMount(){this.bubble_map=new Datamap({element:document.getElementById('globe_div'),fills:{defaultFill:'#ABDDA4','b1':'#2b8a1e','b2':'blue','b3':'orange','b4':'red'},geographyConfig:{popupOnHover:true},bubblesConfig:{borderWidth:0,popupOnHover:false}});this.setEvents();this.bubble_map.svg.call(d3.behavior.zoom().on('zoom',this.redraw));}},{key:'componentWillMount',value:function componentWillMount(){$.ajax({'url':'https://chetan-techjam.deploy.akamai.com/cgi/handle_globe_data.cgi','success':function(data){var globe_data=[];var dc_details=data['dc_details'];var stats_data=data['data_values'];for(var i in dc_details){var _i$split=i.split(':');var _i$split2=_slicedToArray(_i$split,2);var lat=_i$split2[0];var lon=_i$split2[1];var name=dc_details[i]['dc_name']+'('+dc_details[i]['dc_id']+')';var city=dc_details[i]['city'];var state=dc_details[i]['state'];var country=dc_details[i]['country'];var dc_id=dc_details[i]['dc_id'];var b1=stats_data[dc_details[i]['dc_id']]['B1']?parseInt(stats_data[dc_details[i]['dc_id']]['B1']):0;var b2=stats_data[dc_details[i]['dc_id']]['B2']?parseInt(stats_data[dc_details[i]['dc_id']]['B2']):0;var b3=stats_data[dc_details[i]['dc_id']]['B3']?parseInt(stats_data[dc_details[i]['dc_id']]['B3']):0;var b4=stats_data[dc_details[i]['dc_id']]['B4']?parseInt(stats_data[dc_details[i]['dc_id']]['B4']):0;var fillkey='';var total=b1+b2+b3+b4;if(b4+b3>0.8*total){fillkey='b4';}else if(b4+b3>0.6*total){fillkey='b3';}else if(b4+b3>0.4*total){fillkey='b2';}else{fillkey='b1';}globe_data.push({'name':name,'dc_id':dc_id,'radius':4,'city':city,'country':country,'latitude':lat,'longitude':lon,'b1':b1,'b2':b2,'b3':b3,'b4':b4,'fillKey':fillkey});}this.setState({'globe_data':globe_data});}.bind(this)});}},{key:'componentDidUpdate',value:function componentDidUpdate()
 
 
 
@@ -27185,9 +27198,13 @@
 
 
 	{
-	if(this.state.globe_data!=null){
 
-	this.bubble_map.bubbles(this.state.globe_data,{});
+	if(this.state.globe_data!=null&&d3.selectAll('.datamaps-bubble')[0].length==0){
+	this.bubble_map.bubbles(this.state.globe_data,{
+	responsive:true,
+	geographyConfig:{popupOnHover:false}});
+
+	this.setEvents();
 
 
 
@@ -27253,25 +27270,129 @@
 	DcDetails=function(_React$Component){_inherits(DcDetails,_React$Component);
 
 	function DcDetails(props){_classCallCheck(this,DcDetails);var _this=_possibleConstructorReturn(this,(DcDetails.__proto__||Object.getPrototypeOf(DcDetails)).call(this,
-	props));
-	_this.state={'dc_id':_this.props.dc_id,
-	'dc_name':_this.props.dc_name,
-	'server_info':[]};return _this;
+	props));_this.
 
 
-	}_createClass(DcDetails,[{key:'componentWillMount',value:function componentWillMount()
 
+
+
+
+	setServerInfo=function(dc_id){
+	$.ajax({'url':'https://chetan-techjam.deploy.akamai.com/cgi/handle_dc_details.cgi?dc_id='+dc_id,
+	'success':function(data){
+	this.setState({server_info:data['servers'],
+	dc_name:data['dc_name']});
+
+	}.bind(this)});
+
+	}.bind(_this);_this.state={'dc_name':'','server_info':[]};_this.dc_id=null;return _this;}_createClass(DcDetails,[{key:'componentWillReceiveProps',value:function componentWillReceiveProps(
+	nextProps){
+	console.log('Will Receive Props');
+	this.setServerInfo(nextProps.params.dc_id);
+	}},{key:'componentWillMount',value:function componentWillMount()
 	{
+	console.log('Will Mount');
+	this.setServerInfo(this.props.params.dc_id);
+	}},{key:'shouldComponentUpdate',value:function shouldComponentUpdate()
+	{
+	console.log('Should Update');
+	if(this.dc_id!=this.props.params.dc_id){
+	return true;
+	}else{
+	return false;
+	}
+	}},{key:'componentWillUpdate',value:function componentWillUpdate()
+	{
+	console.log('Will Update');
+	}},{key:'componentDidUpdate',value:function componentDidUpdate()
+	{
+	if($.fn.DataTable.isDataTable($(this.tab))){
+	$(this.tab).dataTable().fnDestroy();
+	console.log('Destroyed');
+	}
+	this.dc_id=this.props.params.dc_id;
+	var options={
 
 
+	"aoColumns":[
+	{"bSortable":false},
+	{"bSortable":false},
+	{"bSortable":false},
+	{"bSortable":false},
+	{"bSortable":false},
+	{"bSortable":false},
+	{"bSortable":false},
+	{"bSortable":false},
+	{"bSortable":false},
+	{"bSortable":false}]};
+
+
+	$(this.tab).nieDataTables();
+	$.each($(".nieDatatables-toolbar>.nieDatatables-options"),function(c,v){
+	if($(v).html()=="&nbsp;"){
+	$(v).html("DataCenter Server Health Information For: "+this.state.dc_name);
+	}
+	}.bind(this));
 	}},{key:'render',value:function render()
-	{
+	{var _this2=this;
+	var i=1;
+	if($.fn.DataTable.isDataTable($(this.tab))){
+	$(this.tab).dataTable().fnDestroy();
+	}
+	if(this.state.server_info.length>0){
+	console.log('Render');
 	return _react2.default.createElement('div',{className:'widget-container'},
-	_react2.default.createElement('div',{className:'widget-title'},'Server Health Status is DC ',
-	this.state.dc_name));
+	_react2.default.createElement('table',{className:'widget-datatable datatable',ref:function ref(input){return _this2.tab=input;}},
+	_react2.default.createElement('thead',null,
+	_react2.default.createElement('tr',{key:'head_0'},
+	_react2.default.createElement('th',null,'Serial Number  '),
+	_react2.default.createElement('th',null,'Product'),
+	_react2.default.createElement('th',null,'Server Type '),
+	_react2.default.createElement('th',null,'Region '),
+	_react2.default.createElement('th',null,'DataCenter'),
+	_react2.default.createElement('th',null,'Network'),
+	_react2.default.createElement('th',null,'Warranty End Date'),
+	_react2.default.createElement('th',null,'Server Age'),
+	_react2.default.createElement('th',null,'Down Days'),
+	_react2.default.createElement('th',null,'Likely to Fail(%)'))),
+
+
+	_react2.default.createElement('tbody',null,
+	this.state.server_info.map(function(row){
+	return _react2.default.createElement('tr',{key:'row_'+i++},
+	_react2.default.createElement('td',null,row[0]),
+	_react2.default.createElement('td',null,row[1]),
+	_react2.default.createElement('td',null,row[2]),
+	_react2.default.createElement('td',null,_react2.default.createElement('a',{href:"https://netarch.akamai.com/region/"+row[3],target:'_blank'},row[4])),
+	_react2.default.createElement('td',null,_react2.default.createElement('a',{href:"https://netarch.akamai.com/datacenter/"+row[5],target:'_blank'},row[6])),
+	_react2.default.createElement('td',null,row[7]),
+	_react2.default.createElement('td',null,row[8]),
+	_react2.default.createElement('td',null,row[7]),
+	_react2.default.createElement('td',null,row[9]),
+	_react2.default.createElement('td',null,row[12]));
 
 
 
+	}))));
+
+
+
+
+
+
+	}else{
+	return(
+	_react2.default.createElement('div',{className:'widget-preloader'},
+	_react2.default.createElement('div',{className:'ak-preloader ak-preloader-blue ak-preloader-centered'},
+	_react2.default.createElement('div',{className:'crescent-1'}),
+	_react2.default.createElement('div',{className:'crescent-2'}),
+	_react2.default.createElement('div',{className:'crescent-3'}))));
+
+
+
+
+
+	}
 
 	}}]);return DcDetails;}(_react2.default.Component);exports.default=
 

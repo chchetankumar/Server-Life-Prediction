@@ -49,6 +49,7 @@ class Globe extends React.Component{
           if ( d3.event.scale > 0.8 ) {
           this.bubble_map.svg.selectAll('.datamaps-bubble').attr('r', bubbleRadius / d3.event.scale); 
         }
+    }.bind(this);
           /*this.bubble_map.svg.selectAll('.datamaps-bubble').on("mouseenter",function(event) {
                 if ( $(".h_charts").length == 1 ) {
                     var critical = $(".h_charts").data('critical');
@@ -66,7 +67,7 @@ class Globe extends React.Component{
                     console.log('Not Found');
                 }
         });*/
-    }.bind(this);
+
     componentDidMount(){
          this.bubble_map = new Datamap({element: document.getElementById('globe_div'),
                         fills: {
@@ -77,16 +78,18 @@ class Globe extends React.Component{
                             'b4': 'red'
                         } ,
                         geographyConfig: {
-                            popupOnHover: false,
+                            popupOnHover: true,
                         },
                         bubblesConfig: {
                             borderWidth: 0,
+                            popupOnHover: false,
                         },
          });
          /*this.zoom=new Zoom({
             $container: $('#globe_div'),
             datamap: this.bubble_map,
          });*/
+         this.setEvents();
          this.bubble_map.svg.call(d3.behavior.zoom().on('zoom', this.redraw));
     }
     componentWillMount() {
@@ -144,7 +147,7 @@ class Globe extends React.Component{
                     if (low > 0){ series_data.push({ name: "Low", y: low,color:"green" }) }; 
                     Highcharts.chart("h_charts",{
                                 chart: {plotBackgroundColor: null, plotBorderWidth: null, plotShadow: false, type: "pie"},
-                                title:{text:"Datacenter server health " + bubble.name},
+                                title:{text:"Datacenter server health <br/>" + bubble.name},
                                 credits: {enabled: false},
                                 legend: {labelFormatter: function () { return this.name + ' ['+this.y+' '+(this.y>1?'servers':'server')+']';}},
                                 pie:{cursor: 'pointer', allowPointSelect: true, dataLabels: { enabled: true, format: '<b>{point.name}</b>:'  }},
@@ -175,10 +178,13 @@ class Globe extends React.Component{
 
     }.bind(this);*/
     componentDidUpdate () {
-        if ( this.state.globe_data != null  ) {
-            
+    
+        if ( this.state.globe_data != null && d3.selectAll('.datamaps-bubble')[0].length==0  ) {
             this.bubble_map.bubbles(this.state.globe_data,{
+                responsive: true,
                 geographyConfig: { popupOnHover: false},
+            });
+            this.setEvents(); 
                /*popupTemplate: function(geo,data) {
                    var return_string=  '<div class="hoverinfo">'+data.name+','+data.city+','+data.country+
                             '<div  class="h_charts" id="h_charts" data-critical="'+data.b4+'" data-high="'+data.b3+'" data-medium="'+data.b2+'" data-low="'+data.b1+'">Test</div></div>';
@@ -189,7 +195,7 @@ class Globe extends React.Component{
                              '</script>' ;
                        return return_string; 
                 }*/
-            });
+
             //console.log(this.bubble_map.svg.selectAll('.datamaps-bubble'));
     /*        d3.selectAll('.datamaps-bubble').on("mouseenter",function(bubble) { 
                 if ( $("#h_charts").length == 1 ) {

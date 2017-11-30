@@ -4,3 +4,26 @@
 
 
 }
+.h_charts {
+
+    width:450px;
+    height:400px;
+
+}
+.widget-container {
+    margin-right:20px;
+    margin-left:20px;
+
+}
+
+.widget-title{
+    height:22px;
+    padding-left:10px;
+}
+.app-footer {
+
+    bottom:-250px;
+}
+.hoveover{
+    display:none;
+}
