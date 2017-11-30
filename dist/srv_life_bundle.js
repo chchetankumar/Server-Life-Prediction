@@ -27254,7 +27254,15 @@
 
 
 	_react2.default.createElement('div',{id:'globe_div',ref:function ref(input){return _this2.globe_div=input;},style:{"height":"450px","textAlign":"center"}}),
-	this.props.children);
+	_react2.default.createElement('div',{style:{"paddingLeft":"30px"}},
+	_react2.default.createElement('div',{className:'circle green'}),' ',_react2.default.createElement('div',{className:'left'},' 0-40%'),
+	_react2.default.createElement('div',{className:'circle blue'}),' ',_react2.default.createElement('div',{className:'left'},' 40-60% '),
+	_react2.default.createElement('div',{className:'circle orange'}),' ',_react2.default.createElement('div',{className:'left'},' 60-80% '),
+	_react2.default.createElement('div',{className:'circle red'}),' ',_react2.default.createElement('div',{className:'left'},' 80-100% ')),
+
+	_react2.default.createElement('div',{style:{"margin-top":"20px"}},
+	this.props.children));
+
 
 
 	}}]);return Globe;}(_react2.default.Component);exports.default=

@@ -234,7 +234,15 @@ class Globe extends React.Component{
             Server Failure Probability
             </div>
             <div id='globe_div' ref={(input)=>this.globe_div=input} style={{"height":"450px", "textAlign":"center"}} ></div>
+            <div style={{"paddingLeft":"30px"}}>
+            <div className="circle green"></div> <div className="left"> 0-40%</div> 
+            <div className="circle blue"></div> <div className="left"> 40-60% </div>
+            <div className="circle orange"></div> <div className="left"> 60-80% </div>
+            <div className="circle red"></div> <div className="left"> 80-100% </div>
+            </div>
+            <div style={{"margin-top" : "20px"}}>
             {this.props.children}
+            </div>
             </div>
             );
   }

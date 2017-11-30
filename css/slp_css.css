@@ -28,3 +28,34 @@
 .hoveover{
     display:none;
 }
+
+.left {
+    float: left;
+    margin-right: 10px;
+}
+
+.circle {
+    float: left;
+    width: 10px;
+    height: 10px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+}
+
+.green {
+  background: #2b8a1e;
+}
+
+.blue {
+  background: blue;
+}
+
+.orange {
+  background: orange;
+}
+
+.red {
+  background: red;
+}
+
