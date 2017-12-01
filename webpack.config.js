@@ -9,7 +9,7 @@ module.exports = {
     loaders: [{
              test: /\.js$/,
              exclude: /node_modules/,
-             loader: "babel",
+             loader: "babel-loader",
             query: {
                 presets:["es2015","react","react-native"],
             },
@@ -17,7 +17,7 @@ module.exports = {
           {
           test: /\.rt$/,
             exclude: /node_modules/,
-            loader: "babel",
+            loader: "babel-loader",
             query: {
                 presets:["react-templates"],
             },

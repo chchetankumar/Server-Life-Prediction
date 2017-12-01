@@ -22,28 +22,21 @@ class DcDetails extends React.Component {
             });
     }.bind(this);
     componentWillReceiveProps(nextProps) {
-        console.log('Will Receive Props');
         this.setServerInfo(nextProps.params.dc_id);
     }
     componentWillMount(){
-        console.log('Will Mount');
         this.setServerInfo(this.props.params.dc_id);
     }
     shouldComponentUpdate() {
-        console.log('Should Update');
         if ( this.dc_id != this.props.params.dc_id ) {
             return true;
         } else {
             return false;
         }
     }
-    componentWillUpdate(){
-        console.log('Will Update');
-    }
     componentDidUpdate(){
         if ( $.fn.DataTable.isDataTable($(this.tab)) ) {
             $(this.tab).dataTable().fnDestroy();
-            console.log('Destroyed');
         }
         this.dc_id= this.props.params.dc_id;
         var options= {
@@ -75,7 +68,6 @@ class DcDetails extends React.Component {
             $(this.tab).dataTable().fnDestroy();
         }
         if ( this.state.server_info.length > 0 ) {
-        console.log('Render'); //console.log($(".widget-container"));
         return (<div className="widget-container">
                 <table className='widget-datatable datatable' ref={(input)=>this.tab=input}>
                     <thead>
